@@ -5,6 +5,8 @@
  */
 package covidvaccineapp;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author seanf
@@ -14,9 +16,11 @@ public class CovidVaccineGUI extends javax.swing.JFrame {
     /**
      * Creates new form CovidVaccineGUI
      */
-    private PQInterface queue;
+    private ArrayList<Patient> queue;
+    private PQInterface PQueue;
     public CovidVaccineGUI() {
-        queue = new PatientQueue();
+        queue = new ArrayList();
+        PQueue = new PatientQueue();
         initComponents();
         
     }
@@ -187,9 +191,9 @@ public class CovidVaccineGUI extends javax.swing.JFrame {
     private void addBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBTNActionPerformed
         // TODO add your handling code here:
         String name, condition;
-        int age, priority;
+        int age;
         
-        Patient p = new Patient();
+        Patient p = new Patient(); 
         name = nameTF.getText();
         condition = conditionTF.getText();
         age = Integer.parseInt(ageTF.getText());
@@ -198,79 +202,7 @@ public class CovidVaccineGUI extends javax.swing.JFrame {
         p.setCondition(condition.toUpperCase());
         p.setAge(age);
         
-        if(age >= 90){
-            priority = 10;
-            queue.enqueue(priority,p);
-        }
-        
-        else if(age >= 80){
-            priority = 9;
-            queue.enqueue(priority,p);
-        }
-        
-        else if(age >= 70){
-            priority = 8;
-            queue.enqueue(priority,p);
-        }
-        
-        else if(age > 64 && age < 70){
-            priority = 8;
-            queue.enqueue(priority,p);
-        }
-            
-        else if(age > 54 && age < 65){
-            if(condition.equalsIgnoreCase("Y")){
-                priority = 6;
-                queue.enqueue(priority,p);
-            }
-            
-            else if(condition.equalsIgnoreCase("N")){
-                priority = 5;
-                queue.enqueue(priority,p);
-            }
-            
-        }
-        
-        else if(age > 44 && age < 55){
-            if(condition.equalsIgnoreCase("Y")){
-                priority = 6;
-                queue.enqueue(priority,p);
-            }
-            
-            else if(condition.equalsIgnoreCase("N")){
-                priority = 4;
-                queue.enqueue(priority,p);
-            }
-        }
-        
-        else if(age > 29 && age < 45){
-            if(condition.equalsIgnoreCase("Y")){
-                priority = 6;
-                queue.enqueue(priority,p);
-            }
-            
-            else if(condition.equalsIgnoreCase("N")){
-                priority = 3;
-                queue.enqueue(priority,p);
-            }
-        }
-        
-        else if(age > 17 && age < 30){
-            if(condition.equalsIgnoreCase("Y")){
-                priority = 6;
-                queue.enqueue(priority,p);
-            }
-            
-            else if(condition.equalsIgnoreCase("N")){
-                priority = 2;
-                queue.enqueue(priority,p);
-            }
-        }
-        
-        else if(age < 18){
-            priority = 1;
-            queue.enqueue(priority,p);
-        }
+        queue.add(p);
         
         guiTA.append("Patient: " + name + " is now registered for the vaccine.\n");
         nameTF.setText("");
@@ -280,8 +212,8 @@ public class CovidVaccineGUI extends javax.swing.JFrame {
 
     private void nextBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextBTNActionPerformed
         // TODO add your handling code here:
-        if(!queue.isEmpty()){
-            PQElement elem = (PQElement)queue.dequeue();
+        if(!PQueue.isEmpty()){
+            PQElement elem = (PQElement)PQueue.dequeue();
             Patient p = (Patient)elem.getElement();
             
             guiTA.append("\nThe next candidates to be seen: \n");
@@ -294,9 +226,9 @@ public class CovidVaccineGUI extends javax.swing.JFrame {
 
     private void listBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listBTNActionPerformed
         // TODO add your handling code here:
-        if(!queue.isEmpty()){
+        if(!PQueue.isEmpty()){
             guiTA.append("\nPatient's in queue: \n");
-            guiTA.append(queue.printList() + "\r\n");
+            guiTA.append(PQueue.printList() + "\r\n");
         }
         else{
             guiTA.append("\nThere are no patients in the queue. \n");
@@ -305,8 +237,8 @@ public class CovidVaccineGUI extends javax.swing.JFrame {
 
     private void registeredBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registeredBTNActionPerformed
         // TODO add your handling code here:
-        if(!queue.isEmpty()){
-            guiTA.append("\nThe number of registered patients: " + queue.size() + "\n");
+        if(!PQueue.isEmpty()){
+            guiTA.append("\nThe number of registered patients: " + PQueue.size() + "\n");
         }
         else{
             guiTA.append("\nThere are no patients registered. \n");
@@ -320,6 +252,93 @@ public class CovidVaccineGUI extends javax.swing.JFrame {
 
     private void allocateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allocateBtnActionPerformed
         // TODO add your handling code here:
+        int priority, age;
+        String condition;
+        
+        for(int i = 0; i < queue.size(); i++){
+            Patient p;
+            p = queue.get(i);
+            
+            age = p.getAge();
+            condition = p.getCondition();
+        
+            if(age >= 90){
+                priority = 10;
+                PQueue.enqueue(priority,p);
+            }
+        
+            else if(age >= 80){
+             priority = 9;
+                PQueue.enqueue(priority,p);
+            }
+        
+            else if(age >= 70){
+                priority = 8;
+                PQueue.enqueue(priority,p);
+            }
+        
+            else if(age > 64 && age < 70){
+                priority = 8;
+                PQueue.enqueue(priority,p);
+            }
+            
+            else if(age > 54 && age < 65){
+                if(condition.equalsIgnoreCase("Y")){
+                    priority = 6;
+                    PQueue.enqueue(priority,p);
+                }
+            
+                else if(condition.equalsIgnoreCase("N")){
+                    priority = 5;
+                    PQueue.enqueue(priority,p);
+                }
+            
+            }
+        
+            else if(age > 44 && age < 55){
+                if(condition.equalsIgnoreCase("Y")){
+                    priority = 6;
+                    PQueue.enqueue(priority,p);
+                }
+            
+                else if(condition.equalsIgnoreCase("N")){
+                priority = 4;
+                PQueue.enqueue(priority,p);
+                }
+            }
+        
+            else if(age > 29 && age < 45){
+                if(condition.equalsIgnoreCase("Y")){
+                    priority = 6;
+                    PQueue.enqueue(priority,p);
+                }
+            
+                else if(condition.equalsIgnoreCase("N")){
+                    priority = 3;
+                    PQueue.enqueue(priority,p);
+                    }
+                }   
+        
+                else if(age > 17 && age < 30){
+                    if(condition.equalsIgnoreCase("Y")){
+                        priority = 6;
+                        PQueue.enqueue(priority,p);
+                    }
+            
+                    else if(condition.equalsIgnoreCase("N")){
+                        priority = 2;
+                        PQueue.enqueue(priority,p);
+                    }
+                }
+        
+            else if(age < 18){
+                priority = 1;
+                PQueue.enqueue(priority,p);
+            }
+        
+
+        }
+        queue.clear();
     }//GEN-LAST:event_allocateBtnActionPerformed
 
     /**
