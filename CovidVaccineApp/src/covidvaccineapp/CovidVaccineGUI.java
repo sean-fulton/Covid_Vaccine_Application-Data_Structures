@@ -44,7 +44,6 @@ public class CovidVaccineGUI extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         guiTA = new javax.swing.JTextArea();
         addBTN = new javax.swing.JButton();
-        listBTN = new javax.swing.JButton();
         registeredBTN = new javax.swing.JButton();
         nextBTN = new javax.swing.JButton();
         exitBTN = new javax.swing.JButton();
@@ -69,13 +68,6 @@ public class CovidVaccineGUI extends javax.swing.JFrame {
         addBTN.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addBTNActionPerformed(evt);
-            }
-        });
-
-        listBTN.setText("List Details");
-        listBTN.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                listBTNActionPerformed(evt);
             }
         });
 
@@ -137,9 +129,7 @@ public class CovidVaccineGUI extends javax.swing.JFrame {
                         .addComponent(conditionTF)
                         .addGap(56, 56, 56))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(addBTN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(listBTN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(addBTN)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -179,9 +169,7 @@ public class CovidVaccineGUI extends javax.swing.JFrame {
                     .addComponent(exitBTN)
                     .addComponent(allocateBtn))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(listBTN)
-                    .addComponent(registeredBTN))
+                .addComponent(registeredBTN)
                 .addContainerGap(39, Short.MAX_VALUE))
         );
 
@@ -213,27 +201,15 @@ public class CovidVaccineGUI extends javax.swing.JFrame {
     private void nextBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextBTNActionPerformed
         // TODO add your handling code here:
         if(!PQueue.isEmpty()){
-            PQElement elem = (PQElement)PQueue.dequeue();
-            Patient p = (Patient)elem.getElement();
-            
-            guiTA.append("\nThe next candidates to be seen: \n");
-            guiTA.append(p.getName() + " Priority: " + elem.getKey() + "\n");
-        }
-        else{
-            guiTA.append("There is no one next in the queue!\n");
-        }
+           
+            String nextCandidates = PQueue.dequeue();
+           
+            guiTA.append(nextCandidates);
+       }
+       else{
+           guiTA.append("\nThere are no patients in the queue. \n");
+       }
     }//GEN-LAST:event_nextBTNActionPerformed
-
-    private void listBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listBTNActionPerformed
-        // TODO add your handling code here:
-        if(!PQueue.isEmpty()){
-            guiTA.append("\nPatient's in queue: \n");
-            guiTA.append(PQueue.printList() + "\r\n");
-        }
-        else{
-            guiTA.append("\nThere are no patients in the queue. \n");
-        }
-    }//GEN-LAST:event_listBTNActionPerformed
 
     private void registeredBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registeredBTNActionPerformed
         // TODO add your handling code here:
@@ -255,8 +231,9 @@ public class CovidVaccineGUI extends javax.swing.JFrame {
         int priority, age;
         String condition;
         
+        Patient p;
+        
         for(int i = 0; i < queue.size(); i++){
-            Patient p;
             p = queue.get(i);
             
             age = p.getAge();
@@ -319,17 +296,17 @@ public class CovidVaccineGUI extends javax.swing.JFrame {
                     }
                 }   
         
-                else if(age > 17 && age < 30){
-                    if(condition.equalsIgnoreCase("Y")){
-                        priority = 6;
-                        PQueue.enqueue(priority,p);
-                    }
+            else if(age > 17 && age < 30){
+                 if(condition.equalsIgnoreCase("Y")){
+                    priority = 6;
+                    PQueue.enqueue(priority,p);
+                 }
             
-                    else if(condition.equalsIgnoreCase("N")){
-                        priority = 2;
-                        PQueue.enqueue(priority,p);
-                    }
+                else if(condition.equalsIgnoreCase("N")){
+                    priority = 2;
+                    PQueue.enqueue(priority,p);
                 }
+            }
         
             else if(age < 18){
                 priority = 1;
@@ -338,6 +315,7 @@ public class CovidVaccineGUI extends javax.swing.JFrame {
         
 
         }
+        guiTA.append("\nPatients Assigned Priorities. \n");
         queue.clear();
     }//GEN-LAST:event_allocateBtnActionPerformed
 
@@ -386,7 +364,6 @@ public class CovidVaccineGUI extends javax.swing.JFrame {
     private javax.swing.JButton exitBTN;
     private javax.swing.JTextArea guiTA;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton listBTN;
     private javax.swing.JLabel nameLbl;
     private javax.swing.JTextField nameTF;
     private javax.swing.JButton nextBTN;

@@ -58,17 +58,33 @@ public class PatientQueue implements PQInterface {
         }
     }
     
-    public Object dequeue(){
-        return PatientQueue.remove(0);
+    public String dequeue(){
+        String printGroup = new String();
+        int nextGroupKey;
+        PQElement elem;
+        
+        nextGroupKey = PatientQueue.get(0).getKey();
+        
+        boolean count = true;
+        while(count == true){
+            if(!PatientQueue.isEmpty() && PatientQueue.get(0).getKey() == nextGroupKey ){
+                elem = PatientQueue.get(0);
+     
+                printGroup = printGroup.concat(elem.printPatient()+" "+"Priority: "+ elem.getKey()+"\n");
+                PatientQueue.remove(0);
+            }
+            else{
+                count = false;
+            }
+            
+        }
+        return printGroup;
     }
     
-    public String printList(){
-        String printQueue = new String();
-        PQElement elem;
-        for(int i = 0; i<PatientQueue.size(); i++){
-            elem = PatientQueue.get(i);
-            printQueue = printQueue.concat(elem.printPatient()+" "+"Priority: "+ elem.getKey()+"\n");
-        }
-        return printQueue;
+    public int queueKey(){
+        int key;
+        key = PatientQueue.get(0).getKey();
+        
+        return key;
     }
 }
