@@ -18,15 +18,15 @@ public class PatientQueue implements PQInterface {
         PatientQueue = new ArrayList<PQElement>();
     }
     
-    public boolean isEmpty(){
+    public boolean isEmpty(){ // check if the queue is empty
         return PatientQueue.isEmpty();
     }
     
-    public int size(){
+    public int size(){ // return the size of the queue
         return PatientQueue.size();
     }
     
-    private int findInsertPosition(int newkey){
+    private int findInsertPosition(int newkey){ //find the next position for a item in queue
         boolean found;
         PQElement elem;
         int position;
@@ -44,11 +44,11 @@ public class PatientQueue implements PQInterface {
         return position;
     }
     
-    public void enqueue(int priorkey, Object item){
+    public void enqueue(int priorkey, Object item){ // insert Object type into the queue
         int index;
         PQElement elem = new PQElement(priorkey, (Patient)item);
         
-        index = findInsertPosition(priorkey);
+        index = findInsertPosition(priorkey); // calling findInsertPosition 
         
         if(index == size()){
             PatientQueue.add(elem);
@@ -58,33 +58,26 @@ public class PatientQueue implements PQInterface {
         }
     }
     
-    public String dequeue(){
+    public String dequeue(){ // remove and return the next group of items with the same priority in a String format.
         String printGroup = new String();
         int nextGroupKey;
         PQElement elem;
         
         nextGroupKey = PatientQueue.get(0).getKey();
         
-        boolean count = true;
-        while(count == true){
-            if(!PatientQueue.isEmpty() && PatientQueue.get(0).getKey() == nextGroupKey ){
-                elem = PatientQueue.get(0);
+        boolean count = true; //while loop parameter boolean
+        while(count == true){ // loops until count is false
+            if(!PatientQueue.isEmpty() && PatientQueue.get(0).getKey() == nextGroupKey ){ //if the array is not empty and the current items key is the same as the nextGroups key.
+                elem = PatientQueue.get(0); // get the first element of the queue and pass it as elem
      
-                printGroup = printGroup.concat(elem.printPatient()+" "+"Priority: "+ elem.getKey()+"\n");
-                PatientQueue.remove(0);
+                printGroup = printGroup.concat(elem.printPatient()+" "+"Priority: "+ elem.getKey()+"\n"); // printGroup String concatenates details of patient.
+                PatientQueue.remove(0); // removes item at the top of the queue.
             }
             else{
-                count = false;
+                count = false; //sets count boolean to false and breaks the while loop.
             }
             
         }
-        return printGroup;
-    }
-    
-    public int queueKey(){
-        int key;
-        key = PatientQueue.get(0).getKey();
-        
-        return key;
+        return printGroup; // returns the printGroup string after completing the dequeue and collecting the details of the nextGroup.
     }
 }

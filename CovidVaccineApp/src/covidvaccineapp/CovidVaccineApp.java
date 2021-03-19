@@ -16,8 +16,8 @@ public class CovidVaccineApp {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        CovidVaccineGUI gui = new CovidVaccineGUI();
-        gui.setVisible(true);
+        CovidVaccineGUI gui = new CovidVaccineGUI(); //creating a new instance of the GUI class as 'gui'
+        gui.setVisible(true); //setting the gui visibility to true to show the application interface.
     }
     
 }

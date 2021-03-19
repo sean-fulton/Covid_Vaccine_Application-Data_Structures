@@ -16,13 +16,14 @@ public class CovidVaccineGUI extends javax.swing.JFrame {
     /**
      * Creates new form CovidVaccineGUI
      */
-    private ArrayList<Patient> queue;
-    private PQInterface PQueue;
+    private ArrayList<Patient> queue; //array list to store basic patient details.
+    private PQInterface PQueue; // priority queue to calcualte next patients.
+
     public CovidVaccineGUI() {
-        queue = new ArrayList();
-        PQueue = new PatientQueue();
+        queue = new ArrayList();// Array List.
+        PQueue = new PatientQueue(); // Priority Queue.
         initComponents();
-        
+
     }
 
     /**
@@ -181,142 +182,129 @@ public class CovidVaccineGUI extends javax.swing.JFrame {
         String name, condition;
         int age;
         
-        Patient p = new Patient(); 
-        name = nameTF.getText();
-        condition = conditionTF.getText();
-        age = Integer.parseInt(ageTF.getText());
+        if(nameTF.getText().isEmpty() || conditionTF.getText().isEmpty() || ageTF.getText().isEmpty()){ // check if no fields were filled out before adding a patient
+            guiTA.append("\nPlease fill out all details before adding a Patient\n\n");
+        }
         
-        p.setName(name);
-        p.setCondition(condition.toUpperCase());
-        p.setAge(age);
-        
-        queue.add(p);
-        
-        guiTA.append("Patient: " + name + " is now registered for the vaccine.\n");
-        nameTF.setText("");
-        ageTF.setText("");
-        conditionTF.setText("");
+        else if(!conditionTF.getText().equalsIgnoreCase("Y") && !conditionTF.getText().equalsIgnoreCase("N")){ // check if condidtion answer enters is not Y or N.
+            guiTA.append("\nPlease only enter Y or N for condition.\n\n");
+        }
+                
+        else{
+            
+            Patient p = new Patient(); // new patient p.
+            //retrieve text field data
+            name = nameTF.getText();
+            condition = conditionTF.getText();
+            age = Integer.parseInt(ageTF.getText());
+            //set Patient elements to text field data
+            p.setName(name);
+            p.setCondition(condition.toUpperCase());
+            p.setAge(age);
+            //add to non priority queue.
+            queue.add(p);
+            
+            guiTA.append("Patient: " + name + " is now registered for the vaccine.\n");
+            nameTF.setText("");
+            ageTF.setText("");
+            conditionTF.setText("");
+        }
     }//GEN-LAST:event_addBTNActionPerformed
 
     private void nextBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextBTNActionPerformed
         // TODO add your handling code here:
-        if(!PQueue.isEmpty()){
-           
-            String nextCandidates = PQueue.dequeue();
-           
-            guiTA.append(nextCandidates);
-       }
-       else{
-           guiTA.append("\nThere are no patients in the queue. \n");
-       }
+        if (!PQueue.isEmpty()) {
+
+            String nextCandidates = PQueue.dequeue(); // pass printGroup variable returned from dequeue into nextCandidates
+            guiTA.append("\nThe next candidates in queue:\n");
+            guiTA.append("\n" + nextCandidates); //display next group of patients.
+        } else {
+            guiTA.append("\nThere are no patients in the queue. \n");
+        }
     }//GEN-LAST:event_nextBTNActionPerformed
 
     private void registeredBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registeredBTNActionPerformed
         // TODO add your handling code here:
-        if(!PQueue.isEmpty()){
-            guiTA.append("\nThe number of registered patients: " + PQueue.size() + "\n");
-        }
-        else{
-            guiTA.append("\nThere are no patients registered. \n");
+        if (!PQueue.isEmpty()) {
+            guiTA.append("\nThe number of registered patients: " + PQueue.size() + "\n"); //display number of patients
+        } else {
+            guiTA.append("\nThere are no patients registered. Ensure to assign priorities before checking!\n");
         }
     }//GEN-LAST:event_registeredBTNActionPerformed
 
     private void exitBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitBTNActionPerformed
         // TODO add your handling code here:
-        System.exit(0);
+        System.exit(0); // close application
     }//GEN-LAST:event_exitBTNActionPerformed
 
     private void allocateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allocateBtnActionPerformed
         // TODO add your handling code here:
         int priority, age;
+        priority = 0;
         String condition;
-        
+
         Patient p;
-        
-        for(int i = 0; i < queue.size(); i++){
-            p = queue.get(i);
-            
+
+        for (int i = 0; i < queue.size(); i++) { //loop through ArrayList 'queue'
+            p = queue.get(i); //get item of array list at index i.
+            //set elements from queue to variables
             age = p.getAge();
             condition = p.getCondition();
-        
-            if(age >= 90){
-                priority = 10;
-                PQueue.enqueue(priority,p);
-            }
-        
-            else if(age >= 80){
-             priority = 9;
-                PQueue.enqueue(priority,p);
-            }
-        
-            else if(age >= 70){
-                priority = 8;
-                PQueue.enqueue(priority,p);
-            }
-        
-            else if(age > 64 && age < 70){
-                priority = 8;
-                PQueue.enqueue(priority,p);
-            }
-            
-            else if(age > 54 && age < 65){
-                if(condition.equalsIgnoreCase("Y")){
-                    priority = 6;
-                    PQueue.enqueue(priority,p);
-                }
-            
-                else if(condition.equalsIgnoreCase("N")){
-                    priority = 5;
-                    PQueue.enqueue(priority,p);
-                }
-            
-            }
-        
-            else if(age > 44 && age < 55){
-                if(condition.equalsIgnoreCase("Y")){
-                    priority = 6;
-                    PQueue.enqueue(priority,p);
-                }
-            
-                else if(condition.equalsIgnoreCase("N")){
-                priority = 4;
-                PQueue.enqueue(priority,p);
-                }
-            }
-        
-            else if(age > 29 && age < 45){
-                if(condition.equalsIgnoreCase("Y")){
-                    priority = 6;
-                    PQueue.enqueue(priority,p);
-                }
-            
-                else if(condition.equalsIgnoreCase("N")){
-                    priority = 3;
-                    PQueue.enqueue(priority,p);
-                    }
-                }   
-        
-            else if(age > 17 && age < 30){
-                 if(condition.equalsIgnoreCase("Y")){
-                    priority = 6;
-                    PQueue.enqueue(priority,p);
-                 }
-            
-                else if(condition.equalsIgnoreCase("N")){
-                    priority = 2;
-                    PQueue.enqueue(priority,p);
-                }
-            }
-        
-            else if(age < 18){
-                priority = 1;
-                PQueue.enqueue(priority,p);
-            }
-        
 
+            //set priority based on age.
+            if (age >= 90) {
+                priority = 10;
+            } 
+            else if (age >= 80) {
+                priority = 9;
+            } 
+            else if (age >= 70) {
+                priority = 8;
+            } 
+            else if (age > 64 && age < 70) {
+                priority = 7;
+            } 
+            else if (age > 54 && age < 65) {
+                if (condition.equalsIgnoreCase("Y")) {
+                    priority = 6;
+                } else if (condition.equalsIgnoreCase("N")) {
+                    priority = 5;
+                }
+            } 
+            else if (age > 44 && age < 55) {
+                if (condition.equalsIgnoreCase("Y")) {
+                    priority = 6;
+                } 
+                else if (condition.equalsIgnoreCase("N")) {
+                    priority = 4;
+                }
+            } 
+            else if (age > 29 && age < 45) {
+                if (condition.equalsIgnoreCase("Y")) {
+                    priority = 6;
+                } 
+                else if (condition.equalsIgnoreCase("N")) {
+                    priority = 3;
+                }
+            } 
+            else if (age > 17 && age < 30) {
+                if (condition.equalsIgnoreCase("Y")) {
+                    priority = 6;
+                } 
+                else if (condition.equalsIgnoreCase("N")) {
+                    priority = 2;
+                }
+            } 
+            else if (age < 18) {
+                priority = 1;
+
+            }
+
+            PQueue.enqueue(priority, p); // inserting patient data from queue with new calculated priority into the Priority Queue data structure 'PQueue'
         }
+
         guiTA.append("\nPatients Assigned Priorities. \n");
-        queue.clear();
+        queue.clear(); // clear the Array List to avoid duplicate patient entries.
     }//GEN-LAST:event_allocateBtnActionPerformed
 
     /**

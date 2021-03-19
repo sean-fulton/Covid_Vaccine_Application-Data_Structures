@@ -14,5 +14,4 @@ public interface PQInterface {
     public int size();
     public boolean isEmpty();
     public String dequeue();
-    public int queueKey();
 }
