@@ -36,7 +36,7 @@ public class PQElement {
    
    public String printPatient(){
        String details;
-       details = "Patient Name: " + element.getName() + "," + " Age: " + element.getAge() + "," + " Condition (Y/N): " + element.getCondition() + ",";
+       details = "Patient Name: " + element.getName() + "," + " Age: " + element.getAge() + "," + " Medical Condition (Y/N): " + element.getCondition() + ",";
        return details;
    }
 }
